@@ -655,98 +655,99 @@ export default function Dashboard() {
 
             <form onSubmit={handleSendMessage} className="relative flex flex-col gap-2">
               <div className="relative group bg-sidebar border border-border rounded-[32px] p-2 transition-all shadow-2xl">
-                <div className="flex items-center">
-                  
-                  {/* Upload Options */}
-                  <div className="relative">
-                    <button 
-                      type="button" 
-                      onClick={() => setIsUploadMenuOpen(!isUploadMenuOpen)}
-                      className="p-4 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Paperclip className="w-6 h-6" />
-                    </button>
-                    <AnimatePresence>
-                      {isUploadMenuOpen && (
-                        <>
-                          <div className="fixed inset-0 z-40" onClick={() => setIsUploadMenuOpen(false)} />
-                          <motion.div 
-                            initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                            className="absolute bottom-full left-0 mb-4 w-48 bg-card border border-border rounded-2xl shadow-2xl z-50 overflow-hidden p-2"
-                          >
-                            <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full flex items-center gap-3 p-3 hover:bg-foreground/5 rounded-xl transition-all text-sm font-bold">
-                              <ImageIcon className="w-4 h-4 text-blue-500" /> Image
-                            </button>
-                            <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full flex items-center gap-3 p-3 hover:bg-foreground/5 rounded-xl transition-all text-sm font-bold">
-                              <Film className="w-4 h-4 text-purple-500" /> Video
-                            </button>
-                            <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full flex items-center gap-3 p-3 hover:bg-foreground/5 rounded-xl transition-all text-sm font-bold">
-                              <FileText className="w-4 h-4 text-orange-500" /> File
-                            </button>
-                          </motion.div>
-                        </>
-                      )}
-                    </AnimatePresence>
-                  </div>
-
-                  <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Ask anything..."
-                    className="flex-1 bg-transparent border-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 text-foreground py-4 text-lg placeholder:text-muted-foreground"
-                    disabled={loading}
-                  />
-                  
-                  <input type="file" ref={fileInputRef} onChange={(e) => handleFileUpload(e, 'any')} className="hidden" />
-
-                  {/* Model Switcher - Now next to Send button */}
-                  <div className="relative mr-2">
-                    <button 
-                      type="button"
-                      onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-foreground/5 transition-all"
-                    >
-                      <span className={`text-xs font-black uppercase tracking-widest ${selectedModel.color}`}>{selectedModel.name.split(' ')[0]}</span>
-                      <ChevronDown className="w-3 h-3 text-muted-foreground" />
-                    </button>
-                    <AnimatePresence>
-                      {isModelMenuOpen && (
-                        <>
-                          <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)} />
-                          <motion.div 
-                            initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                            className="absolute bottom-full right-0 mb-4 w-56 bg-card border border-border rounded-2xl shadow-2xl z-50 overflow-hidden p-2"
-                          >
-                            {MODELS.map(m => (
-                              <button
-                                key={m.id}
-                                type="button"
-                                onClick={() => { if(!m.premium || (user?.tier && user.tier !== 'Basic')) { setSelectedModel(m); setIsModelMenuOpen(false); } else { toast.error("Upgrade to Pro to use this model"); } }}
-                                className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${selectedModel.id === m.id ? 'bg-foreground/5' : 'hover:bg-foreground/5'} ${m.premium && (!user?.tier || user.tier === 'Basic') ? 'opacity-50' : ''}`}
-                              >
-                                <div className="flex flex-col items-start">
-                                  <span className={`text-sm font-bold ${m.color}`}>{m.name}</span>
-                                  <span className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">{m.premium ? 'Pro Model' : 'Standard'}</span>
-                                </div>
-                                {m.premium && (!user?.tier || user.tier === 'Basic') ? <Lock className="w-3 h-3 text-muted-foreground" /> : selectedModel.id === m.id && <Check className="w-4 h-4" />}
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-2">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    {/* Upload Options */}
+                    <div className="relative flex-shrink-0">
+                      <button 
+                        type="button" 
+                        onClick={() => setIsUploadMenuOpen(!isUploadMenuOpen)}
+                        className="p-4 text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <Paperclip className="w-6 h-6" />
+                      </button>
+                      <AnimatePresence>
+                        {isUploadMenuOpen && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setIsUploadMenuOpen(false)} />
+                            <motion.div 
+                              initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                              className="absolute bottom-full left-0 mb-4 w-48 bg-card border border-border rounded-2xl shadow-2xl z-50 overflow-hidden p-2"
+                            >
+                              <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full flex items-center gap-3 p-3 hover:bg-foreground/5 rounded-xl transition-all text-sm font-bold">
+                                <ImageIcon className="w-4 h-4 text-blue-500" /> Image
                               </button>
-                            ))}
-                          </motion.div>
-                        </>
-                      )}
-                    </AnimatePresence>
+                              <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full flex items-center gap-3 p-3 hover:bg-foreground/5 rounded-xl transition-all text-sm font-bold">
+                                <Film className="w-4 h-4 text-purple-500" /> Video
+                              </button>
+                              <button type="button" onClick={() => fileInputRef.current?.click()} className="w-full flex items-center gap-3 p-3 hover:bg-foreground/5 rounded-xl transition-all text-sm font-bold">
+                                <FileText className="w-4 h-4 text-orange-500" /> File
+                              </button>
+                            </motion.div>
+                          </>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <input
+                      type="text"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      placeholder="Ask anything..."
+                      className="flex-1 min-w-0 bg-transparent border-none focus:ring-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 text-foreground py-4 text-lg placeholder:text-muted-foreground"
+                      disabled={loading}
+                    />
+                    <input type="file" ref={fileInputRef} onChange={(e) => handleFileUpload(e, 'any')} className="hidden" />
                   </div>
 
-                  <motion.button
-                    type="submit"
-                    disabled={loading || (!input.trim() && attachments.length === 0)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="w-12 h-12 bg-foreground text-background rounded-2xl flex items-center justify-center disabled:opacity-20 transition-all shadow-lg mr-1"
-                  >
-                    <Send className="w-5 h-5" />
-                  </motion.button>
+                  <div className="flex flex-wrap items-center gap-2 justify-end flex-shrink-0 w-full sm:w-auto">
+                    <div className="relative">
+                      <button 
+                        type="button"
+                        onClick={() => setIsModelMenuOpen(!isModelMenuOpen)}
+                        className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-foreground/5 transition-all"
+                      >
+                        <span className={`text-xs font-black uppercase tracking-widest ${selectedModel.color}`}>{selectedModel.name.split(' ')[0]}</span>
+                        <ChevronDown className="w-3 h-3 text-muted-foreground" />
+                      </button>
+                      <AnimatePresence>
+                        {isModelMenuOpen && (
+                          <>
+                            <div className="fixed inset-0 z-40" onClick={() => setIsModelMenuOpen(false)} />
+                            <motion.div 
+                              initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+                              className="absolute bottom-full right-0 mb-4 w-56 bg-card border border-border rounded-2xl shadow-2xl z-50 overflow-hidden p-2"
+                            >
+                              {MODELS.map(m => (
+                                <button
+                                  key={m.id}
+                                  type="button"
+                                  onClick={() => { if(!m.premium || (user?.tier && user.tier !== 'Basic')) { setSelectedModel(m); setIsModelMenuOpen(false); } else { toast.error("Upgrade to Pro to use this model"); } }}
+                                  className={`w-full flex items-center justify-between p-3 rounded-xl transition-all ${selectedModel.id === m.id ? 'bg-foreground/5' : 'hover:bg-foreground/5'} ${m.premium && (!user?.tier || user.tier === 'Basic') ? 'opacity-50' : ''}`}
+                                >
+                                  <div className="flex flex-col items-start">
+                                    <span className={`text-sm font-bold ${m.color}`}>{m.name}</span>
+                                    <span className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">{m.premium ? 'Pro Model' : 'Standard'}</span>
+                                  </div>
+                                  {m.premium && (!user?.tier || user.tier === 'Basic') ? <Lock className="w-3 h-3 text-muted-foreground" /> : selectedModel.id === m.id && <Check className="w-4 h-4" />}
+                                </button>
+                              ))}
+                            </motion.div>
+                          </>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <motion.button
+                      type="submit"
+                      disabled={loading || (!input.trim() && attachments.length === 0)}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-12 h-12 bg-foreground text-background rounded-2xl flex items-center justify-center disabled:opacity-20 transition-all shadow-lg"
+                    >
+                      <Send className="w-5 h-5" />
+                    </motion.button>
+                  </div>
                 </div>
               </div>
             </form>
