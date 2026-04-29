@@ -33,7 +33,8 @@ export default function LoginPage() {
           window.location.href = "/Dashboard";
         }
       } catch (err) {
-      } catch (err) {}
+        // Not logged in, do nothing
+      }
     };
     checkAuth();
   }, [router]);
